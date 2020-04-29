@@ -30,7 +30,6 @@ def vote(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     try:
         selected_choice = question.choice_set.get(pk=request.POST['choice'])
-        print(selected_choice)
     except (KeyError, Choice.DoesNotExist):
         # Redisplay the question voting form
         return render(request, 'polls/detail.html', {
@@ -40,4 +39,7 @@ def vote(request, question_id):
     else:
         selected_choice.votes += 1
         selected_choice.save()
+        # Always return an HttpResponseRedirect after successfully dealing
+        # with POST data. This prevents data form being posted twice if a 
+        # user hits the Back button.
         return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
